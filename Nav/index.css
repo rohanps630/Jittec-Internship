@@ -4,12 +4,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-nav {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
-}
-
 ul {
   list-style-type: none;
   margin: 0;
@@ -34,6 +28,16 @@ section {
   align-items: center;
 }
 
+.sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
 #home {
   background-color: #f2f2f2;
 }
@@ -48,4 +52,8 @@ section {
 
 #contact {
   background-color: #bfbfbf;
+}
+
+.navigation-link.active {
+  color: red;
 }

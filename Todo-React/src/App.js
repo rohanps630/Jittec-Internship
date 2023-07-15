@@ -1,41 +1,39 @@
 import "./App.css";
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import { ListItem, TodoInput, TodoFilter } from "./Components";
 
 let id = 0;
 
-function reducer(items, action) {
-  switch (action.type) {
-    case "add":
-      return [
-        ...items,
-        {
-          title: action.title,
-          completed: false,
-          id: id++,
-        },
-      ];
-    case "toggle":
-      return items.map((item) => ({
-        ...item,
-        completed: item.id === action.id ? !item.completed : item.completed,
-      }));
-    case "removeCompleted":
-      return items.filter((item) => {
-        return !item.completed;
-      });
-    default:
-      return [];
-  }
-}
-
 export default function App() {
   const [filter, setFilter] = useState("all");
-  const [items, dispatch] = useReducer(reducer, [
+  const [items, setItems] = useState([
     { id: id++, title: "Task A", completed: false },
     { id: id++, title: "Task B", completed: false },
     { id: id++, title: "Task C", completed: false },
   ]);
+
+  const addItem = (title) => {
+    setItems((prevItems) => [
+      ...prevItems,
+      {
+        title,
+        completed: false,
+        id: id++,
+      },
+    ]);
+  };
+
+  const toggleCompletion = (itemId) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, completed: !item.completed } : item
+      )
+    );
+  };
+
+  const removeCompletedItems = () => {
+    setItems((prevItems) => prevItems.filter((item) => !item.completed));
+  };
 
   return (
     <>
@@ -43,9 +41,7 @@ export default function App() {
       <TodoInput
         aria-label="Type a task to add to the list"
         placeholder="What needs to be done?"
-        onSubmit={(title) => {
-          dispatch({ type: "add", title });
-        }}
+        onSubmit={addItem}
       />
       <hr />
       <TodoFilter value={filter} onChange={setFilter} />
@@ -68,17 +64,13 @@ export default function App() {
               key={item.id}
               title={item.title}
               completed={item.completed}
-              onClick={() => {
-                dispatch({ type: "toggle", id: item.id });
-              }}
+              onClick={() => toggleCompletion(item.id)}
             />
           ))}
       </ul>
       <button
         disabled={!items.some((item) => item.completed)}
-        onClick={() => {
-          dispatch({ type: "removeCompleted" });
-        }}
+        onClick={removeCompletedItems}
       >
         Remove completed items
       </button>
